@@ -12,7 +12,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: setup and test
+      - name: install
+        run: |
+          npm install
+
+      - name: ci clean
         run: |
           npm ci
           npx hardhat test
