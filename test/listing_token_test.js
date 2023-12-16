@@ -68,4 +68,30 @@ describe("Listing Token Sales Contract", function () {
         expect(feeReceived).to.equal(expectedFee);
 
     })
+
+    it("withdrawEther should successfully executed with correct value", async function() {
+        const initialBalanceOwner = await ethers.provider.getBalance(owner.address);
+        await tokenSales.updatePrice(parseEther("3"), parseEther("30"), false);
+        await addr1.sendTransaction({
+            to: tokenSales.getAddress(),
+            value: parseEther("12")
+        });
+        await expect(tokenSales.withdrawEther(owner.address, parseEther("12"))).to.not.be.reverted;
+        await expect(tokenSales.withdrawEther(owner.address, parseEther("12"))).to.be.reverted;
+
+        const finalBalanceOwner = await ethers.provider.getBalance(owner.address);
+        const resultFromWithdraw = finalBalanceOwner - initialBalanceOwner;
+        await expect(resultFromWithdraw).to.be.greaterThan(parseEther("11"));
+    })
+
+    it("withdrawToken should successfully executed with correct value", async function() {
+        const initialBalanceOwner = await tokenCoin.balanceOf(owner.address);
+        await tokenSales.updatePrice(parseEther("3"), parseEther("30"), false);
+        expect(initialBalanceOwner).to.be.equal(0);
+
+        await expect(tokenSales.withdrawTokens(owner.address, parseEther("10"))).to.be.not.reverted;
+
+        const finalBalanceOwner = await tokenCoin.balanceOf(owner.address);
+        expect(finalBalanceOwner).to.be.equal(parseEther("10"));
+    })
 })
