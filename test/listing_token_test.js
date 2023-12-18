@@ -94,4 +94,16 @@ describe("Listing Token Sales Contract", function () {
         const finalBalanceOwner = await tokenCoin.balanceOf(owner.address);
         expect(finalBalanceOwner).to.be.equal(parseEther("10"));
     })
+
+    it("User should not be able to buy token after reach threashold", async function() {
+        await tokenSales.updatePrice(parseEther("3"), parseEther("10"), false);
+        await expect(addr1.sendTransaction({
+            to: tokenSales.getAddress(),
+            value: parseEther("30")
+        })).to.not.be.reverted;
+        await expect(addr1.sendTransaction({
+            to: tokenSales.getAddress(),
+            value: parseEther("30")
+        })).to.be.revertedWithCustomError(tokenSales, "ExceedMaximumSalesOffer");
+    })
 })

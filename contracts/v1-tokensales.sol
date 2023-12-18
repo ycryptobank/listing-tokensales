@@ -10,7 +10,7 @@ contract TokenSales is Ownable {
 
     IERC20 public token; 
     uint256 public constant feePercentage = 15; // 1.5% fee 
-    uint256 public totalEtherPurchased;
+    uint256 public totalTokenPurchased;
     uint256 public currentPrice = 3 ether;
     uint256 public threshold = 1000000 ether;
     bool isFeeCharged = true;
@@ -39,21 +39,19 @@ contract TokenSales is Ownable {
         uint256 multiplicationPrice = 1 ether;
 
         require(msg.value % multiplicationPrice == 0, "Value must be multiplication by the price");
+        
+        uint256 tokensToTransfer = msg.value / currentPrice * 1 ether;
 
-        uint256 tokensToTransfer;
-
-        if (totalEtherPurchased == 0) {
-            totalEtherPurchased = msg.value;
+        if (totalTokenPurchased == 0) {
+            totalTokenPurchased = tokensToTransfer;
         } else {
-            totalEtherPurchased += msg.value;
+            totalTokenPurchased += tokensToTransfer;
         }
 
-        if (totalEtherPurchased > threshold) {
-            totalEtherPurchased -= msg.value;
+        if (totalTokenPurchased > threshold) {
+            totalTokenPurchased -= tokensToTransfer;
             revert ExceedMaximumSalesOffer();
         }
-        
-        tokensToTransfer = msg.value / currentPrice * 1 ether;
 
         uint256 feeAmount = 0;
         if (isFeeCharged) {
