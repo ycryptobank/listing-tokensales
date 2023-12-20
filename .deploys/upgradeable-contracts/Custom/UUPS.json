@@ -1,0 +1,12 @@
+{
+  "id": 137,
+  "network": "Custom",
+  "deployments": {
+    "0x063ea109c10c12712f8b1f011bc0dcf6106e2e89": {
+      "date": "2023-12-20T16:12:53.080Z",
+      "contractName": "YCBPoint",
+      "fork": "london",
+      "implementationAddress": "0x88F4532991b92875022ce498236229CF94f97582"
+    }
+  }
+}
