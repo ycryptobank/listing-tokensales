@@ -14,6 +14,6 @@ contract YourCryptoBank is ERC20, ERC20Burnable, ERC20Permit, ERC20FlashMint, Ow
         ERC20Permit("Your Crypto Bank")
         Ownable(initialOwner)
     {
-        _mint(msg.sender, 4000000 * 18 ** decimals());
+        _mint(msg.sender, 4000000 * 10 ** decimals());
     }
 }
