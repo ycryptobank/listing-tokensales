@@ -1,9 +1,6 @@
 {
   "dependencies": {
-    "@openzeppelin/contracts": "^5.0.0",
-    "@remix-project/remixd": "^0.6.19",
-    "remixd": "^0.2.4",
-    "yarn": "^1.22.21"
+    "@openzeppelin/contracts": "^5.0.0"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.2",

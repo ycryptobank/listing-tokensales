@@ -10,3 +10,5 @@ artifacts
 
 package-lock.json
 yarn.lock
+
+remix-compiler.config.js
