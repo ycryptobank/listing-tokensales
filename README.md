@@ -9,4 +9,5 @@ Feature:
 - owner to withdraw ether
 
 Audits:
-in progress
+- [x] WhopFi personal audits
+- [ ] 3rd party audit

@@ -14,6 +14,7 @@ contract TokenSales is Ownable {
     uint256 public currentPrice = 3 ether;
     uint256 public threshold = 1000000 ether;
     bool isFeeCharged = true;
+    address devAddress;
 
     event TokensPurchased(
         address indexed buyer,
@@ -21,10 +22,12 @@ contract TokenSales is Ownable {
         uint256 pricePaid
     );
 
-    constructor(address _tokenAddress, address initialOwner)
+    constructor(address _tokenAddress, address initialOwner, address _devAddress)
         Ownable(initialOwner)
     {
         token = IERC20(_tokenAddress);
+        totalTokenPurchased = 0 ether;
+        devAddress = _devAddress;
     }
 
     function updatePrice(uint256 _price, uint256 _threshold, bool _isFeeCharged) external onlyOwner {
@@ -56,7 +59,7 @@ contract TokenSales is Ownable {
         uint256 feeAmount = 0;
         if (isFeeCharged) {
             feeAmount = (msg.value * feePercentage) / 1000;
-            payable(owner()).transfer(feeAmount); // Transfer fee to owner
+            payable(devAddress).transfer(feeAmount);
         }
 
         token.transfer(msg.sender, tokensToTransfer);

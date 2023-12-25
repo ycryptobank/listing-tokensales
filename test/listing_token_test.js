@@ -6,16 +6,17 @@ describe("Listing Token Sales Contract", function () {
     let tokenSales;
     let tokenCoin;
     let owner;
+    let devWallet;
     let addr1;
 
     beforeEach(async function() {
         const _tokenSales = await ethers.getContractFactory("TokenSales");
-        [owner, addr1] = await ethers.getSigners();
+        [owner, addr1, devWallet] = await ethers.getSigners();
 
         const _minterContract = await ethers.getContractFactory("ERC20PresetMinterPauser");
         tokenCoin = await _minterContract.connect(owner).deploy("TokenYield", "TY");
 
-        tokenSales = await _tokenSales.deploy(tokenCoin.getAddress(), owner.address);
+        tokenSales = await _tokenSales.deploy(tokenCoin.getAddress(), owner.address, devWallet.address);
 
         await tokenCoin.mint(tokenSales.getAddress(), parseUnits("10000000", 18));
     })
@@ -38,7 +39,7 @@ describe("Listing Token Sales Contract", function () {
         await tokenSales.updatePrice(parseEther("3"), parseEther("30"), true);
         
         const purchaseAmount = parseEther("3");
-        const initialBalanceOwner = await ethers.provider.getBalance(owner.address);
+        const initialBalanceDevWallet = await ethers.provider.getBalance(devWallet.address);
         const expectedFee = purchaseAmount * toBigInt(15) / toBigInt(1000);
 
         expect(await ethers.provider.getBalance(addr1.address)).to.be.at.least(purchaseAmount);
@@ -62,9 +63,9 @@ describe("Listing Token Sales Contract", function () {
 
         expect(await tokenCoin.balanceOf(addr1.address)).to.equal(parseEther("1"));
 
-        // test correct value sending to owner
-        const finalBalanceOwner = await ethers.provider.getBalance(owner.address);
-        const feeReceived = finalBalanceOwner - initialBalanceOwner;
+        // test correct value sending to devWallet
+        const finalBalanceDevWallet = await ethers.provider.getBalance(devWallet.address);
+        const feeReceived = finalBalanceDevWallet - initialBalanceDevWallet;
         expect(feeReceived).to.equal(expectedFee);
 
     })
